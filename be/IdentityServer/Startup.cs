@@ -1,22 +1,16 @@
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
 using IdentityServer.Configs;
 using IdentityServer.Data;
 using IdentityServer4.EntityFramework.DbContexts;
 using IdentityServer4.EntityFramework.Mappers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 
 namespace IdentityServer
@@ -67,7 +61,7 @@ namespace IdentityServer
         {
             // this will do the initial DB population
             InitializeDatabase(app);
-            
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -84,7 +78,7 @@ namespace IdentityServer
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
-        
+
         private void InitializeDatabase(IApplicationBuilder app)
         {
             using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
@@ -97,29 +91,17 @@ namespace IdentityServer
 
                 var idp = Configuration.GetSection(IdpConfig.Name).Get<IdpConfig>();
                 foreach (var client in idp.Clients)
-                {
                     if (!context.Clients.Any(c => c.ClientId == client.ClientId))
-                    {
                         context.Clients.Add(client.ToEntity());
-                    }
-                }
-                
+
                 foreach (var resource in idp.Resources)
-                {
                     if (!context.IdentityResources.Any(i => i.Name == resource.Name))
-                    {
                         context.IdentityResources.Add(resource.ToEntity());
-                    }
-                }
-                
+
                 foreach (var scope in idp.ApiScopes)
-                {
                     if (!context.ApiScopes.Any(a => a.Name == scope.Name))
-                    {
                         context.ApiScopes.Add(scope.ToEntity());
-                    }
-                }
-                
+
                 context.SaveChanges();
             }
         }
