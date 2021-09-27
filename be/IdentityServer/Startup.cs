@@ -83,11 +83,13 @@ namespace IdentityServer
         {
             using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
             {
+                serviceScope.ServiceProvider.GetRequiredService<ApplicationDbContext>().Database.Migrate();
+                
                 var persistContext = serviceScope.ServiceProvider.GetRequiredService<PersistedGrantDbContext>();
-                persistContext.Database.EnsureCreated();
+                persistContext.Database.Migrate();
 
                 var context = serviceScope.ServiceProvider.GetRequiredService<ConfigurationDbContext>();
-                context.Database.EnsureCreated();
+                context.Database.Migrate();
 
                 var idp = Configuration.GetSection(IdpConfig.Name).Get<IdpConfig>();
                 foreach (var client in idp.Clients)
