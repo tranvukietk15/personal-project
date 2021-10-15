@@ -1,0 +1,8 @@
+{% extends 'polls/index.html' %}
+
+{% block questions %}
+questions:
+    {% for item in questions %}
+        {{ item.question_text }}
+    {% endfor %}
+{% endblock questions %}
