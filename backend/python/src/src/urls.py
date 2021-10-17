@@ -17,9 +17,13 @@ from django.contrib import admin
 from django.urls import path, include
 from graphene_django.views import GraphQLView
 
+# static file image
+from django.conf import settings
+from django.conf.urls.static import static
+
 urlpatterns = [
     path('polls/', include('polls.urls')),
-    path('resume/', include('resume.urls')),
+    path('', include('resume.urls')),
     path('admin/', admin.site.urls),
     path("graphql", GraphQLView.as_view(graphiql=True)),
-]
+] + static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)

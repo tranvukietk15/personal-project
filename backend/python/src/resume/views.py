@@ -5,8 +5,12 @@ from .models import Profile
 # Create your views here.
 
 def index(request):
-    return HttpResponse("Hello, world. You're at the polls index.")
+    return render(request, 'resume/index.html')
 
 def profile(request):
     context = Profile.objects.all()
     return HttpResponse(context)
+
+def details(request, profile_name):
+    context = {'detail': Profile.objects.filter(path=profile_name).first()}
+    return render(request, 'resume/details.html', context)
